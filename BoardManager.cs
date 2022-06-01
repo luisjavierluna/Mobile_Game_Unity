@@ -6,6 +6,7 @@ public class BoardManager : MonoBehaviour
 {
     [SerializeField] GameObject currentCandy;
     [SerializeField] int xSize, ySize;
+    public List<Sprite> sprites = new List<Sprite>();
 
     private void Start()
     {
@@ -30,6 +31,9 @@ public class BoardManager : MonoBehaviour
                     currentCandy.transform.rotation);
                 newCandy.name = string.Format("Candy [{0}][{1}]", x, y);
                 newCandy.transform.parent = transform;
+
+                Sprite sprite = sprites[Random.Range(0, sprites.Count)];
+                newCandy.GetComponent<SpriteRenderer>().sprite = sprite;
             }
         }
     }
