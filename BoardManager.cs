@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
+    public static BoardManager instance;
+
     [SerializeField] GameObject currentCandy;
     [SerializeField] int xSize, ySize;
     public List<Sprite> sprites = new List<Sprite>();
     GameObject[,] candies;
 
+    public bool IsShifting { get; set; }
+
     private void Start()
     {
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+
         Vector2 offset = currentCandy.GetComponent<BoxCollider2D>().size;
         CreateInitialBoard(offset);
     }
