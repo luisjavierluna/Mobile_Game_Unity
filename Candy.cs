@@ -51,9 +51,26 @@ public class Candy : MonoBehaviour
             }
             else
             {
+                SwapCandies(previousSelectedCandy);
                 previousSelectedCandy.DeselectCandy();
                 SelectCandy();
             }
         }
+    }
+
+    void SwapCandies(Candy newCandy)
+    {
+        if (spriteRenderer.sprite == newCandy.spriteRenderer.sprite)
+        {
+            return;
+        }
+
+        Sprite oldCandy = newCandy.spriteRenderer.sprite;
+        newCandy.spriteRenderer.sprite = spriteRenderer.sprite;
+        spriteRenderer.sprite = oldCandy;
+
+        int tempId = newCandy.id;
+        newCandy.id = id;
+        id  = tempId;
     }
 }
