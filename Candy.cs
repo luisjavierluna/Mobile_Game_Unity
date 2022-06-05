@@ -10,6 +10,14 @@ public class Candy : MonoBehaviour
     static Candy previousSelectedCandy = null;
     [SerializeField] bool isSelected = false;
 
+    Vector2[] adjacentDirections = new Vector2[]
+    {
+        Vector2.up,
+        Vector2.down,
+        Vector2.right,
+        Vector2.left
+    };
+
     SpriteRenderer spriteRenderer;
 
     private void Awake()
@@ -39,11 +47,7 @@ public class Candy : MonoBehaviour
             return;
         }
 
-        if (isSelected)
-        {
-            DeselectCandy();
-        }
-        else
+        if (!isSelected)
         {
             if (previousSelectedCandy == null)
             {
@@ -51,10 +55,22 @@ public class Candy : MonoBehaviour
             }
             else
             {
-                SwapCandies(previousSelectedCandy);
-                previousSelectedCandy.DeselectCandy();
-                SelectCandy();
+                if (CanSwipe())
+                {
+                    SwapCandies(previousSelectedCandy);
+                    previousSelectedCandy.DeselectCandy();
+                    //SelectCandy();
+                }
+                else
+                {
+                    previousSelectedCandy.DeselectCandy();
+                    //SelectCandy();
+                }
             }
+        }
+        else
+        {
+            DeselectCandy();
         }
     }
 
@@ -73,4 +89,33 @@ public class Candy : MonoBehaviour
         newCandy.id = id;
         id  = tempId;
     }
+
+    GameObject GetNeighbor(Vector2 direction)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction);
+        if (hit.collider != null)
+        {
+            return hit.collider.gameObject;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    List<GameObject> GetAllNeighbors()
+    {
+        List<GameObject> neighbors = new List<GameObject>();
+        foreach (Vector2 direction in adjacentDirections)
+        {
+            neighbors.Add(GetNeighbor(direction));
+        }
+        return neighbors;
+    }
+
+    bool CanSwipe()
+    {
+        return GetAllNeighbors().Contains(previousSelectedCandy.gameObject);
+    }
+
 }
