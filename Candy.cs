@@ -58,7 +58,9 @@ public class Candy : MonoBehaviour
                 if (CanSwipe())
                 {
                     SwapCandies(previousSelectedCandy);
+                    previousSelectedCandy.FindAllMatches();
                     previousSelectedCandy.DeselectCandy();
+                    FindAllMatches();
                     //SelectCandy();
                 }
                 else
@@ -118,4 +120,55 @@ public class Candy : MonoBehaviour
         return GetAllNeighbors().Contains(previousSelectedCandy.gameObject);
     }
 
+    List<GameObject> FindMatches(Vector2 direction)
+    {
+        List<GameObject> foundMatches = new List<GameObject>();
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction);
+        while (hit.collider != null && 
+               hit.collider.GetComponent<SpriteRenderer>().sprite == spriteRenderer.sprite)
+        {
+            foundMatches.Add(hit.collider.gameObject);
+            hit = Physics2D.Raycast(hit.collider.transform.position, direction);
+        }
+
+        return foundMatches;
+    }
+
+    bool ClearMatches(Vector2[] directions)
+    {
+        List<GameObject> clearedMatches = new List<GameObject>();
+        foreach (Vector2 direction in directions)
+        {
+            clearedMatches.AddRange(FindMatches(direction));
+        }
+
+        if (clearedMatches.Count >= BoardManager.MIN_CANDIES_TO_MATCH)
+        {
+            foreach (GameObject candy in clearedMatches)
+            {
+                candy.GetComponent<SpriteRenderer>().sprite = null;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void FindAllMatches()
+    {
+        if (spriteRenderer.sprite == null)
+        {
+            return;
+        }
+
+        bool vMatch = ClearMatches(new Vector2[2] { Vector2.up, Vector2.down });
+        bool hMatch = ClearMatches(new Vector2[2] { Vector2.right, Vector2.left });
+
+        if (vMatch || hMatch)
+        {
+            spriteRenderer.sprite = null;
+        }
+    }
 }

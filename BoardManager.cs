@@ -13,6 +13,8 @@ public class BoardManager : MonoBehaviour
 
     public bool IsShifting { get; set; }
 
+    public const int MIN_CANDIES_TO_MATCH = 2;
+
     private void Start()
     {
         if (instance == null) instance = this;
