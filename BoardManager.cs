@@ -71,6 +71,14 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
+
+        for (int x = 0; x < xSize; x++)
+        {
+            for (int y = 0; y < ySize; y++)
+            {
+                candies[x, y].GetComponent<Candy>().FindAllMatches();
+            }
+        }
     }
 
     IEnumerator MakeCandiesFall(int x, int yStart, float shiftDelay = 0.05f)
