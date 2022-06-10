@@ -99,6 +99,7 @@ public class BoardManager : MonoBehaviour
 
         for (int i = 0; i < nullCandies; i++)
         {
+            GUIManager.instance.Score += 10;
             for (int j = 0; j < renderers.Count - 1; j++)
             {
                 renderers[j].sprite = renderers[j + 1].sprite;
